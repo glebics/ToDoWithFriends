@@ -1,11 +1,14 @@
-glebrahimzhanov/todowithfriends/ToDoWithFriends.class
 models/User.class
-dataaccessobject/UserDAOImpl.class
-models/Task.class
 glebrahimzhanov/todowithfriends/TestConnection.class
 controller/FriendsController.class
 dataaccessobject/UserDAO.class
+dataaccessobject/UserDAOImpl.class
+models/Task.class
+glebrahimzhanov/todowithfriends/LoginController.class
+controller/CreateTaskDialog.class
 glebrahimzhanov/todowithfriends/MainApp.class
 controller/TasksController.class
 glebrahimzhanov/todowithfriends/DatabaseConnection.class
+LoginController.class
 models/Friend.class
+controller/MainController.class

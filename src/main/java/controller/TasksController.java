@@ -1,26 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
 
-/**
- *
- * @author glebrahimzanov
- */
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 
 public class TasksController extends AnchorPane {
     public TasksController() {
-        // Создание элементов интерфейса для задач
         Label tasksLabel = new Label("Tasks will be here");
-        this.getChildren().add(tasksLabel);
+        Button createTaskButton = new Button("Create Task");
+        createTaskButton.setOnAction(this::showCreateTaskDialog);
+
+        this.getChildren().addAll(tasksLabel, createTaskButton);
         AnchorPane.setTopAnchor(tasksLabel, 10.0);
         AnchorPane.setLeftAnchor(tasksLabel, 10.0);
+        AnchorPane.setTopAnchor(createTaskButton, 40.0);
+        AnchorPane.setLeftAnchor(createTaskButton, 10.0);
+    }
 
-        // Добавление других элементов интерфейса для задач по мере необходимости
+    private void showCreateTaskDialog(ActionEvent event) {
+        CreateTaskDialog dialog = new CreateTaskDialog();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.showAndWait();
     }
 }
-
-

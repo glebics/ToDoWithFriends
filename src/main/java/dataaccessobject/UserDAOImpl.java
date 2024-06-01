@@ -1,84 +1,51 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dataaccessobject;
 
-/**
- *
- * @author glebrahimzanov
- */
-
-import models.User;
 import glebrahimzhanov.todowithfriends.DatabaseConnection;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import models.User;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDAOImpl implements UserDAO {
-    private Connection connection;
 
-    public UserDAOImpl() {
-        try {
-            this.connection = DatabaseConnection.getConnection();
+    @Override
+    public User login(String username, String password) {
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void addUser(User user) throws SQLException {
-        String query = "INSERT INTO users (username, password) VALUES (?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, user.getUsername());
-            statement.setString(2, user.getPassword());
-            statement.executeUpdate();
-        }
-    }
-
-    @Override
-    public User getUserById(int id) throws SQLException {
-        String query = "SELECT * FROM users WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return new User(resultSet.getInt("id"), resultSet.getString("username"), resultSet.getString("password"));
-            }
         }
         return null;
     }
 
     @Override
-    public List<User> getAllUsers() throws SQLException {
-        List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM users";
-        try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                users.add(new User(resultSet.getInt("id"), resultSet.getString("username"), resultSet.getString("password")));
+    public boolean register(String username, String password) {
+        String checkSql = "SELECT * FROM users WHERE username = ?";
+        String insertSql = "INSERT INTO users (username, password) VALUES (?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement checkPstmt = conn.prepareStatement(checkSql);
+             PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
+            checkPstmt.setString(1, username);
+            ResultSet rs = checkPstmt.executeQuery();
+            if (rs.next()) {
+                return false; // Пользователь уже существует
             }
+            insertPstmt.setString(1, username);
+            insertPstmt.setString(2, password);
+            insertPstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return users;
-    }
-
-    @Override
-    public void updateUser(User user) throws SQLException {
-        String query = "UPDATE users SET username = ?, password = ? WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, user.getUsername());
-            statement.setString(2, user.getPassword());
-            statement.setInt(3, user.getId());
-            statement.executeUpdate();
-        }
-    }
-
-    @Override
-    public void deleteUser(int id) throws SQLException {
-        String query = "DELETE FROM users WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
-        }
+        return false;
     }
 }
