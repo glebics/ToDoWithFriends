@@ -1,0 +1,11 @@
+glebrahimzhanov/todowithfriends/ToDoWithFriends.class
+models/User.class
+dataaccessobject/UserDAOImpl.class
+models/Task.class
+glebrahimzhanov/todowithfriends/TestConnection.class
+controller/FriendsController.class
+dataaccessobject/UserDAO.class
+glebrahimzhanov/todowithfriends/MainApp.class
+controller/TasksController.class
+glebrahimzhanov/todowithfriends/DatabaseConnection.class
+models/Friend.class
