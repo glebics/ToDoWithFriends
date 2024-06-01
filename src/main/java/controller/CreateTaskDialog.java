@@ -1,21 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
 
-/**
- *
- * @author glebrahimzanov
- */
-
+import dataaccessobject.TaskDAO;
+import models.Task;
+import glebrahimzhanov.todowithfriends.MainApp;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class CreateTaskDialog extends Stage {
-    public CreateTaskDialog() {
+    private TasksController tasksController;
+
+    public CreateTaskDialog(TasksController tasksController) {
+        this.tasksController = tasksController;
+
         setTitle("Create Task");
 
         VBox vbox = new VBox(10);
@@ -29,7 +30,12 @@ public class CreateTaskDialog extends Stage {
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction(e -> {
-            // Код для сохранения задачи в базу данных
+            String name = taskNameField.getText();
+            String description = taskDescriptionField.getText();
+            int userId = MainApp.getCurrentUser().getId(); // Используем ID текущего пользователя
+            Task task = new Task(name, description, userId);
+            TaskDAO.saveTask(task);
+            tasksController.loadTasks();
             close();
         });
 

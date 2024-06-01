@@ -1,7 +1,8 @@
-import dataaccessobject.UserDAO;
+package glebrahimzhanov.todowithfriends.controller;
+
 import dataaccessobject.UserDAOImpl;
-import glebrahimzhanov.todowithfriends.MainApp;
 import models.User;
+import glebrahimzhanov.todowithfriends.MainApp;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -12,7 +13,7 @@ import javafx.scene.layout.VBox;
 public class LoginController extends VBox {
     private TextField usernameField;
     private PasswordField passwordField;
-    private UserDAO userDAO;
+    private UserDAOImpl userDAO;
 
     public LoginController() {
         setSpacing(10);
@@ -39,10 +40,15 @@ public class LoginController extends VBox {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
+        System.out.println("Attempting to login with username: " + username);
+
         User user = userDAO.login(username, password);
         if (user != null) {
+            System.out.println("Login successful for user: " + user.getUsername());
+            MainApp.setCurrentUser(user);
             MainApp.showMainView();
         } else {
+            System.out.println("Login failed for username: " + username);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Login Error");
             alert.setHeaderText(null);
@@ -55,14 +61,18 @@ public class LoginController extends VBox {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
+        System.out.println("Attempting to register with username: " + username);
+
         boolean success = userDAO.register(username, password);
         if (success) {
+            System.out.println("Registration successful for username: " + username);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Registration Successful");
             alert.setHeaderText(null);
             alert.setContentText("Registration completed. You can now log in.");
             alert.showAndWait();
         } else {
+            System.out.println("Registration failed for username: " + username);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Registration Error");
             alert.setHeaderText(null);

@@ -19,7 +19,10 @@ public class UserDAOImpl implements UserDAO {
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
+                System.out.println("User found: " + username);
                 return new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
+            } else {
+                System.out.println("User not found: " + username);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -47,5 +50,21 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

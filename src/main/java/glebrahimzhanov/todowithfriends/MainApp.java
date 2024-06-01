@@ -1,17 +1,24 @@
 package glebrahimzhanov.todowithfriends;
 
-import controller.MainController;
+import controller.FriendTasksController;
+import glebrahimzhanov.todowithfriends.controller.LoginController;
+import glebrahimzhanov.todowithfriends.controller.MainController;
+import models.User;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
     private static Stage primaryStage;
+    private static User currentUser;
 
     @Override
     public void start(Stage primaryStage) {
         MainApp.primaryStage = primaryStage;
+
+        // Инициализация базы данных
+        DatabaseSetup.initializeDatabase();
+
         showLoginView();
     }
 
@@ -29,6 +36,28 @@ public class MainApp extends Application {
         primaryStage.setTitle("ToDoWithFriends");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public static void showFriendTasksView(User friend) {
+        FriendTasksController friendTasksController = new FriendTasksController(friend);
+        Scene scene = new Scene(friendTasksController, 800, 600);
+        primaryStage.setTitle(friend.getUsername() + "'s Tasks");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static User getCurrentUser() {
+        System.out.println("Getting current user: " + (currentUser != null ? currentUser.getUsername() : "null"));
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User user) {
+        System.out.println("Setting current user: " + (user != null ? user.getUsername() : "null"));
+        currentUser = user;
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     public static void main(String[] args) {
