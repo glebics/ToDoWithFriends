@@ -1,14 +1,16 @@
+/Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/dataaccessobject/UserService.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/dataaccessobject/UserDAOImpl.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/models/Friend.java
+/Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/controller/TaskHandler.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/glebrahimzhanov/todowithfriends/MainApp.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/glebrahimzhanov/todowithfriends/LoginController.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/controller/FriendsController.java
+/Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/controller/LeftMenuBar.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/glebrahimzhanov/todowithfriends/DatabaseConnection.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/controller/FriendTasksController.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/models/Task.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/dataaccessobject/UserDAO.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/dataaccessobject/FriendDAO.java
-/Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/controller/TopMenuBar.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/glebrahimzhanov/todowithfriends/DatabaseSetup.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/controller/CreateTaskDialog.java
 /Users/glebrahimzanov/Desktop/ToDoWithFriends/src/main/java/models/User.java

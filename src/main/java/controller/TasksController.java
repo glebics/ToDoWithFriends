@@ -1,66 +1,80 @@
 package controller;
 
 import dataaccessobject.TaskDAO;
-import models.Task;
 import glebrahimzhanov.todowithfriends.MainApp;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.geometry.Insets;
-import java.util.List;
-import javafx.scene.layout.Pane;
+import models.Task;
+import models.User;
 
-public class TasksController extends AnchorPane {
+import java.util.List;
+
+public class TasksController extends VBox implements TaskHandler {
     private VBox tasksContainer;
+    private User currentUser;
 
     public TasksController() {
-        TopMenuBar topMenuBar = new TopMenuBar();
+        this(MainApp.getCurrentUser());
+    }
 
-        tasksContainer = new VBox(10);
-        tasksContainer.setStyle("-fx-padding: 10;");
+    public TasksController(User user) {
+        this.currentUser = user;
+        if (currentUser == null) {
+            System.out.println("Error: current user is null");
+            return;
+        }
+        setSpacing(10);
+        setStyle("-fx-padding: 20;");
 
         Button createTaskButton = new Button("Create Task");
-        createTaskButton.setOnAction(this::showCreateTaskDialog);
+        createTaskButton.setStyle("-fx-background-color: linear-gradient(to bottom, #333, #444); -fx-text-fill: white; -fx-cursor: hand;");
+        createTaskButton.setPrefWidth(Double.MAX_VALUE);
+        createTaskButton.setOnAction(this::handleCreateTaskButton);
 
-        VBox content = new VBox(10, topMenuBar, createTaskButton, tasksContainer);
-        content.setStyle("-fx-padding: 10;");
-        this.getChildren().add(content);
-        AnchorPane.setTopAnchor(content, 0.0);
-        AnchorPane.setLeftAnchor(content, 0.0);
-        AnchorPane.setRightAnchor(content, 0.0);
-        AnchorPane.setBottomAnchor(content, 0.0);
+        tasksContainer = new VBox(10);
+
+        getChildren().addAll(createHeader(), createTaskButton, tasksContainer);
 
         loadTasks();
     }
 
-    private void showCreateTaskDialog(ActionEvent event) {
-        CreateTaskDialog dialog = new CreateTaskDialog(this);
-        dialog.showAndWait();
+    private Label createHeader() {
+        Label header = new Label(currentUser.getUsername() + "'s Tasks");
+        header.setFont(javafx.scene.text.Font.font("Arial", 24));
+        header.setStyle("-fx-text-fill: #333;");
+        return header;
     }
 
+    private void handleCreateTaskButton(ActionEvent event) {
+        CreateTaskDialog dialog = new CreateTaskDialog(this);
+        dialog.show();
+    }
+
+    @Override
     public void loadTasks() {
         tasksContainer.getChildren().clear();
-        List<Task> tasks = TaskDAO.getTasksByUserId(MainApp.getCurrentUser().getId());
+        List<Task> tasks = TaskDAO.getTasksByUserId(currentUser.getId());
         for (Task task : tasks) {
             tasksContainer.getChildren().add(createTaskPane(task));
         }
     }
 
-    private Pane createTaskPane(Task task) {
+    private HBox createTaskPane(Task task) {
         HBox taskPane = new HBox(10);
         taskPane.setPadding(new Insets(10));
-        taskPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), BorderWidths.DEFAULT)));
-        
+        taskPane.setStyle("-fx-border-color: black; -fx-border-radius: 10; -fx-background-color: #EEE; -fx-background-radius: 10;");
+        taskPane.setPrefHeight(50);
+        HBox.setHgrow(taskPane, Priority.ALWAYS);
+
+        Label taskLabel = new Label(task.getName() + ": " + task.getDescription());
+        updateTaskStyle(taskPane, task);
+
         CheckBox completedCheckBox = new CheckBox();
         completedCheckBox.setSelected(task.isCompleted());
         completedCheckBox.setOnAction(e -> {
@@ -69,24 +83,26 @@ public class TasksController extends AnchorPane {
             updateTaskStyle(taskPane, task);
         });
 
-        Label taskLabel = new Label(task.getName() + ": " + task.getDescription());
-        updateTaskStyle(taskPane, task);
-
-        Button deleteButton = new Button("Delete");
+        Button deleteButton = new Button("✖");
+        deleteButton.setStyle("-fx-background-color: transparent; -fx-text-fill: black; -fx-cursor: hand;");
         deleteButton.setOnAction(e -> {
             TaskDAO.deleteTask(task.getId());
             loadTasks();
         });
 
-        taskPane.getChildren().addAll(completedCheckBox, taskLabel, deleteButton);
+        HBox.setHgrow(taskLabel, Priority.ALWAYS);
+        taskPane.getChildren().addAll(taskLabel, completedCheckBox, deleteButton);
+        HBox.setMargin(taskLabel, new Insets(0, 10, 0, 0));
+        HBox.setMargin(completedCheckBox, new Insets(0, 10, 0, 0));
+        HBox.setMargin(deleteButton, new Insets(0, 10, 0, 0));
         return taskPane;
     }
 
     private void updateTaskStyle(HBox taskPane, Task task) {
         if (task.isCompleted()) {
-            taskPane.setStyle("-fx-background-color: lightgray; -fx-text-fill: gray; -fx-text-decoration: line-through;");
+            taskPane.setStyle("-fx-background-color: lightgray; -fx-text-fill: gray; -fx-text-decoration: line-through; -fx-border-radius: 10; -fx-background-radius: 10;");
         } else {
-            taskPane.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+            taskPane.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-radius: 10; -fx-background-radius: 10;");
         }
     }
 }

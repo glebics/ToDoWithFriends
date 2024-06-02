@@ -13,7 +13,7 @@
                 <exec.vmArgs>--add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics --module-path /Library/Java/Extensions/javafx-sdk-17.0.11/lib/</exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.appArgs></exec.appArgs>
-                <exec.mainClass>${packageClassName}</exec.mainClass>
+                <exec.mainClass>glebrahimzhanov.todowithfriends.MainApp</exec.mainClass>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>

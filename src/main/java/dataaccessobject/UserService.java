@@ -8,10 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDAOImpl implements UserDAO {
+public class UserService {
 
-    @Override
-    public User login(String username, String password) {
+    public static User login(String username, String password) {
         String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -27,8 +26,7 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
-    @Override
-    public boolean register(String username, String password) {
+    public static boolean register(String username, String password) {
         String checkSql = "SELECT * FROM users WHERE username = ?";
         String insertSql = "INSERT INTO users (username, password) VALUES (?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -37,7 +35,7 @@ public class UserDAOImpl implements UserDAO {
             checkPstmt.setString(1, username);
             ResultSet rs = checkPstmt.executeQuery();
             if (rs.next()) {
-                return false; // User already exists
+                return false; // Пользователь уже существует
             }
             insertPstmt.setString(1, username);
             insertPstmt.setString(2, password);
@@ -47,21 +45,5 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
         }
         return false;
-    }
-
-    @Override
-    public User getUserByUsername(String username) {
-        String sql = "SELECT * FROM users WHERE username = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

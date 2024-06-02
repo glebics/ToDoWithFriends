@@ -1,8 +1,8 @@
 package glebrahimzhanov.todowithfriends;
 
 import controller.FriendTasksController;
-import glebrahimzhanov.todowithfriends.controller.LoginController;
-import glebrahimzhanov.todowithfriends.controller.MainController;
+import controller.LoginController;
+import controller.MainController;
 import models.User;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -31,7 +31,7 @@ public class MainApp extends Application {
     }
 
     public static void showMainView() {
-        MainController mainController = new MainController();
+        MainController mainController = new MainController(currentUser);
         Scene scene = new Scene(mainController, 800, 600);
         primaryStage.setTitle("ToDoWithFriends");
         primaryStage.setScene(scene);
@@ -42,6 +42,15 @@ public class MainApp extends Application {
         FriendTasksController friendTasksController = new FriendTasksController(friend);
         Scene scene = new Scene(friendTasksController, 800, 600);
         primaryStage.setTitle(friend.getUsername() + "'s Tasks");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void showFriendsView() {
+        MainController mainController = new MainController(currentUser);
+        mainController.showFriendsPane(null);
+        Scene scene = new Scene(mainController, 800, 600);
+        primaryStage.setTitle("Friends");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

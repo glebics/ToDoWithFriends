@@ -1,47 +1,56 @@
 package controller;
 
 import dataaccessobject.TaskDAO;
-import models.Task;
-import glebrahimzhanov.todowithfriends.MainApp;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.Task;
+import glebrahimzhanov.todowithfriends.MainApp;
 
 public class CreateTaskDialog extends Stage {
-    private TasksController tasksController;
+    private TextField nameField;
+    private TextArea descriptionField;
+    private TaskHandler taskHandler;
 
-    public CreateTaskDialog(TasksController tasksController) {
-        this.tasksController = tasksController;
-
+    public CreateTaskDialog(TaskHandler taskHandler) {
+        this.taskHandler = taskHandler;
         setTitle("Create Task");
 
-        VBox vbox = new VBox(10);
-        vbox.setPadding(new javafx.geometry.Insets(10));
+        VBox root = new VBox(10);
+        root.setStyle("-fx-padding: 20;");
 
-        TextField taskNameField = new TextField();
-        taskNameField.setPromptText("Task Name");
+        Label nameLabel = new Label("Task Name:");
+        nameField = new TextField();
 
-        TextArea taskDescriptionField = new TextArea();
-        taskDescriptionField.setPromptText("Task Description");
+        Label descriptionLabel = new Label("Task Description:");
+        descriptionField = new TextArea();
+        descriptionField.setPromptText("Task Description");
 
         Button saveButton = new Button("Save");
-        saveButton.setOnAction(e -> {
-            String name = taskNameField.getText();
-            String description = taskDescriptionField.getText();
-            int userId = MainApp.getCurrentUser().getId(); // Используем ID текущего пользователя
-            Task task = new Task(name, description, userId);
-            TaskDAO.saveTask(task);
-            tasksController.loadTasks();
-            close();
-        });
+        saveButton.setOnAction(this::handleSaveButton);
 
-        vbox.getChildren().addAll(new Label("Task Name:"), taskNameField, new Label("Task Description:"), taskDescriptionField, saveButton);
+        root.getChildren().addAll(nameLabel, nameField, descriptionLabel, descriptionField, saveButton);
 
-        Scene scene = new Scene(vbox);
+        Scene scene = new Scene(root);
         setScene(scene);
+        initModality(Modality.APPLICATION_MODAL);
+    }
+
+    private void handleSaveButton(ActionEvent event) {
+        String name = nameField.getText();
+        String description = descriptionField.getText();
+        int userId = MainApp.getCurrentUser().getId();
+
+        Task newTask = new Task(name, description, userId);
+        TaskDAO.saveTask(newTask);
+
+        taskHandler.loadTasks();
+        close();
     }
 }

@@ -19,30 +19,48 @@ public class Task {
         this.name = name;
         this.description = description;
         this.userId = userId;
-        this.completed = false; // По умолчанию задача не выполнена
+        this.completed = false; // Default value for new tasks
     }
+
+    // Getters and setters
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isCompleted() {
         return completed;
     }
 
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
     public int getUserId() {
         return userId;
     }
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

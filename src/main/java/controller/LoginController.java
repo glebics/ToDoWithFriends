@@ -1,14 +1,15 @@
-package glebrahimzhanov.todowithfriends.controller;
+package controller;
 
 import dataaccessobject.UserDAOImpl;
-import models.User;
-import glebrahimzhanov.todowithfriends.MainApp;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import models.User;
+import glebrahimzhanov.todowithfriends.MainApp;
 
 public class LoginController extends VBox {
     private TextField usernameField;
@@ -16,10 +17,10 @@ public class LoginController extends VBox {
     private UserDAOImpl userDAO;
 
     public LoginController() {
+        userDAO = new UserDAOImpl();
+        
         setSpacing(10);
         setStyle("-fx-padding: 20;");
-
-        userDAO = new UserDAOImpl();
 
         usernameField = new TextField();
         usernameField.setPromptText("Username");
@@ -40,15 +41,12 @@ public class LoginController extends VBox {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        System.out.println("Attempting to login with username: " + username);
-
         User user = userDAO.login(username, password);
         if (user != null) {
-            System.out.println("Login successful for user: " + user.getUsername());
+            System.out.println("User found: " + user.getUsername());
             MainApp.setCurrentUser(user);
             MainApp.showMainView();
         } else {
-            System.out.println("Login failed for username: " + username);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Login Error");
             alert.setHeaderText(null);
@@ -61,18 +59,14 @@ public class LoginController extends VBox {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        System.out.println("Attempting to register with username: " + username);
-
         boolean success = userDAO.register(username, password);
         if (success) {
-            System.out.println("Registration successful for username: " + username);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Registration Successful");
             alert.setHeaderText(null);
             alert.setContentText("Registration completed. You can now log in.");
             alert.showAndWait();
         } else {
-            System.out.println("Registration failed for username: " + username);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Registration Error");
             alert.setHeaderText(null);
